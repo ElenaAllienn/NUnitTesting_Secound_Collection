@@ -1,3 +1,5 @@
+using NUnit.Framework.Constraints;
+
 namespace CollectionT.NUnitTests
 {
     public class CollectionTests
@@ -220,6 +222,34 @@ namespace CollectionT.NUnitTests
             //Assert
             Assert.AreEqual(numbers.ToString(), "[]" ,"Verify collaction is empty");
         }
+
+        //DDT
+        [TestCase("Petar,Maria,Ivan", 0, "Petar")]
+        [TestCase("Petar,Maria,Ivan", 1, "Maria")]
+        [TestCase("Petar,Maria,Ivan", 2, "Ivan")]
+        [TestCase("Petar", 0, "Petar")]
+        public void Test_Collection_GetByValidIndex_DDT(string data, int index, string expected)
+        {
+            var coll = new Collection<string>(data.Split(","));
+            var actual = coll[index];
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase("", 0)]
+        [TestCase("Petar", -1)]
+        [TestCase("Petar", 1)]
+        [TestCase("Petar,Maria,Steve", -1)]
+        [TestCase("Petar,Maria,Steve", 3)]
+        [TestCase("Petar,Maria,Steve", 150)]
+
+        public void Test_Collection_GetByInvalidIndex_DDT(string data, int index)
+        {
+            var coll = new Collection<string>(data.Split(",") );
+ 
+            Assert.That(() => coll[index], Throws.TypeOf<ArgumentOutOfRangeException>());
+
+        }
+
 
     }
 }
